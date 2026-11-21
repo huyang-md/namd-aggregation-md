@@ -197,10 +197,10 @@ def main():
         sys.exit(r.returncode)
 
     print("\nnext steps -- play with the analysis on this case:")
-    print("  python scripts/aggregate.py --dir examples/demo-case --traj 04_prod.dcd "
-          "--mode centroid --cutoff 6")
-    print("  python scripts/aggregate.py --dir examples/demo-case --traj 04_prod.dcd --cutoff 6")
-    print("  outputs are in examples/demo-case/analysis/ -- start with summary.txt")
+    agg = os.path.join(ROOT, "scripts", "aggregate.py")
+    print(f'  python "{agg}" --dir "{CASE}" --traj 04_prod.dcd --mode centroid --cutoff 6')
+    print(f'  python "{agg}" --dir "{CASE}" --traj 04_prod.dcd --cutoff 6')
+    print(f'  outputs are in {os.path.join(CASE, "analysis")} -- start with summary.txt')
     return 0
 
 
