@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software in your work, please cite it using the metadata in this file."
+type: software
+title: "namd-aggregation-md: NAMD workflow for small-molecule self-assembly"
+abstract: "Preparation, pre-flight checks, resume helpers and post-analysis for NAMD small-molecule self-assembly simulations: aggregate size, shape, composition and radial density for any solute, plus optional stacking geometry (J/H, slip angle, interplanar distance) for aromatic systems."
+authors:
+  - alias: "huyang-md"
+    family-names: "huyang-md"
+    website: "https://github.com/huyang-md"
+keywords:
+  - molecular dynamics
+  - NAMD
+  - self-assembly
+  - aggregation
+  - CHARMM
+  - Packmol
+license: GPL-3.0-or-later
+repository-code: "https://github.com/huyang-md/namd-aggregation-md"
+version: v1.0.0
+date-released: "2026-11-22"
