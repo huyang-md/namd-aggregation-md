@@ -1,5 +1,57 @@
 # namd-aggregation-md
 
+[![tests](https://github.com/huyang-md/namd-aggregation-md/actions/workflows/tests.yml/badge.svg)](https://github.com/huyang-md/namd-aggregation-md/actions/workflows/tests.yml)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+
+## Quick start (English)
+
+Preparation, pre-flight checks, resume helpers and post-analysis for **NAMD
+small-molecule self-assembly simulations** — scatter a few dozen molecules in
+water, let them self-assemble, and measure aggregate size, shape, composition
+and (optionally) π-stacking geometry. The in-depth documentation is in
+**Chinese** (`docs/`); the tools themselves are language-neutral.
+
+Requirements: Python 3.10+ with numpy. Packmol and VMD are only needed to
+*build* systems from scratch — analysis runs on plain trajectories.
+
+```bash
+git clone https://github.com/huyang-md/namd-aggregation-md.git
+cd namd-aggregation-md
+python -m pip install numpy
+
+# two-minute demo: synthesises a 40-molecule case, then analyses it (no MD software needed)
+python examples/demo.py
+
+# …or run the analysis yourself on the generated case
+python scripts/aggregate.py --dir examples/demo-case --traj 04_prod.dcd
+
+# run the test suite (62 tests, synthesises its own data)
+python -m unittest discover -s tests
+```
+
+`examples/demo.py` builds 40 dye molecules in a 100 Å box — 20 pre-assembled
+into a ball, 20 free — and analyses them. Verbatim `summary.txt` of that run:
+
+```text
+trajectory : 04_prod.dcd
+frames     : 21 (stride 1)
+solute     : 40 molecules of {'DYE': 40}
+criterion  : contact, cutoff 4.0 A
+
+largest cluster : mean 20.0, max 20, final 20 of 40 molecules
+mean cluster    : 1.9 -> 1.9 molecules (stable)
+radius of gyration of the largest cluster: mean 7.10 A, last 7.06 A
+shape of the largest cluster: sphere 21
+radial density peaks at 1.2 A from the cluster centre (core-shell structure if this is not ~0)
+```
+
+Deeper reading (Chinese): the 13-step reproducibility tutorial
+[`docs/tutorial.md`](docs/tutorial.md) and the tick-box
+[`docs/checklist.md`](docs/checklist.md). License: GPL-3.0-or-later.
+
+---
+
 NAMD 小分子自组装模拟的**准备 · 体检 · 续跑 · 分析**工具集。
 
 适用场景：几十个分子用 Packmol 随机分散到水里，跑 NAMD 自发组装。
@@ -24,7 +76,17 @@ NAMD 小分子自组装模拟的**准备 · 体检 · 续跑 · 分析**工具�
 
 ## 1. 安装
 
-把整个 `namd-aggregation-md` 文件夹放到下面任一处：
+### 第 0 步：获取代码
+
+```powershell
+git clone https://github.com/huyang-md/namd-aggregation-md.git
+```
+
+（不用 git 就在 GitHub 页面 Code → Download ZIP 解压。）
+
+仓库根目录的 `SKILL.md` 是给 AI agent 看的说明文件（ZCode 等工具的 skill 约定）。
+**普通用户直接用 `scripts/` 下的脚本即可，可以忽略它**；只有想挂成 agent skill 时，
+才把整个 `namd-aggregation-md` 文件夹放到下面任一处：
 
 | 位置 | 生效范围 |
 |---|---|
@@ -64,6 +126,9 @@ python -m unittest discover -s tests        # 62 个测试，应全过
 ---
 
 ## 2. 五分钟上手
+
+手里还没有现成体系？先跑 `python examples/demo.py`——它只用 numpy 合成一个
+40 分子的小体系（`examples/demo-case/`），下面第 4a 步的命令可以直接对它练手。
 
 假设你的体系目录长这样（`psf`/`pdb`/`toppar` 在一起）：
 
