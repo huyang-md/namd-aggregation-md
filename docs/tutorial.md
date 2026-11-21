@@ -484,7 +484,7 @@ ring3         6       6/6          0.001     yes
 | 工具 | 用途 | 缺失时 |
 |---|---|---|
 | Python 3.10+ / numpy | 全部脚本 | 必装 |
-| **Packmol** | 随机摆放 | `pipeline` 停在 ④，仍会写好 `wa.inp` |
+| **Packmol** | 随机摆放 | `pip install packmol`（v100+ 自带二进制）；缺失时 `pipeline` 停在 ④，仍会写好 `wa.inp` |
 | **VMD** | psfgen、solvate、autoionize | `pipeline` 停在 ⑤，会写好 tcl |
 | NAMD | 跑 MD | 不在本地也行，把目录拷到集群 |
 

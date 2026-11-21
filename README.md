@@ -32,13 +32,33 @@ NAMD 小分子自组装模拟的**准备 · 体检 · 续跑 · 分析**工具�
 | `~\.dsh\skills\` | 该用户所有项目 |
 | `<项目>\.agents\skills\` 或 `~\.agents\skills\` | agents 约定 |
 
-**依赖**：Python 3.10+ 和 numpy，别的都不用装。
-不需要 NAMD、VMD、GROMACS——脚本只读文件、只写文本和 CSV。
+**依赖分两档：**
 
-验证：
+| 用途 | 需要什么 | 怎么装 |
+|---|---|---|
+| 只读轨迹、做分析 | Python 3.10+ 和 numpy | `pip install numpy` |
+| 从零搭体系（`pipeline`） | 再加 **Packmol** 和 **VMD** | `pip install packmol`；VMD 从官网装 |
+
+Packmol 从 v100 起官方提供了 pip 包，自带 Windows/macOS/Linux 二进制，**不需要 Julia，也不需要 conda**：
+
+```powershell
+pip install packmol          # 提供 packmol 命令
+packmol --version
+```
+
+如果 `packmol` 不在 PATH 上，把它所在的目录加到环境变量 `MD_TOOLS_DIR`：
+
+```powershell
+setx MD_TOOLS_DIR "C:\Users\<you>\AppData\Roaming\Python\Python313\Scripts"
+```
+
+分析部分不需要 NAMD、VMD、GROMACS——只读文件、只写文本和 CSV。
+
+验证安装：
 
 ```powershell
 python scripts/study_report.py --help
+python -m unittest discover -s tests        # 62 个测试，应全过
 ```
 
 ---
@@ -162,7 +182,34 @@ DCD 读取器兼容：NAMD 的 6 值单元胞记录、9 值记录、以及 VMD �
 
 ---
 
-## 7. 边界
+## 7. 测试
+
+```powershell
+python -m unittest discover -s tests        # 62 个测试
+```
+
+测试不需要任何 MD 数据——DCD/PSF/PDB/XSC 都由测试自己合成。覆盖：
+
+| 测试文件 | 覆盖什么 |
+|---|---|
+| `test_core.py` | DCD/PSF/PDB/XSC 解析、周期边界、分子解缠绕 |
+| `test_generators.py` | 盒子反算、Packmol/VMD 脚本、四个 conf 的生成与回读 |
+| `test_checks.py` | conf 解析、漂移检测、`firsttimestep` 校验、可比性判定 |
+| `test_analysis.py` | 回转半径与形状分类、跨边界聚簇、簇判据 |
+| `test_docs.py` | 编码/BOM、语法、无个人数据、每个工具的 `--help` |
+
+其中几条是**回归测试**，专门盯住真出现过的 bug：
+
+- `test_unwrap_molecule_stays_in_global_frame` —— 分子解缠绕曾把每个分子重新以自身为原点，
+  导致所有分子间距离作废
+- `test_gather_cluster_rejoins_across_boundary` —— 聚集体跨周期边界时 Rg 曾算出 55 Å（应为 24 Å）
+- `test_import` 与 `test_hand_written_conf_is_not_drift` —— 老项目接入后不应产生误报
+
+GitHub Actions 会在每次 push 时于 Linux 上跑 Python 3.10 和 3.12（见 `.github/workflows/tests.yml`）。
+
+---
+
+## 8. 边界
 
 - 脚本**不启动** NAMD，只生成输入和读结果。运行请自行提交。
 - 聚集尺寸依赖判据（接触/质心、cutoff），换判据数字会变；报告时写明判据。

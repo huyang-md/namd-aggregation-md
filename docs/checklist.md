@@ -26,7 +26,7 @@ $S  = '<skill 目录>\scripts'
 ## 阶段 2　搭体系　👤 + 🤖
 
 - [ ] 👤 决定：分子数（如 50）与目标浓度（如 50 mM），**所有体系必须相同**
-- [ ] 👤 装 Packmol（免安装 exe，放 PATH 或记住路径）
+- [ ] 👤 装 Packmol：pip install packmol，若不在 PATH 上就设 MD_TOOLS_DIR
 - [ ] 🤖 一条命令：
 
 ```powershell

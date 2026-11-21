@@ -54,8 +54,9 @@ def find_tool(explicit, names):
     """Locate an executable: explicit path, then PATH, then common install roots.
 
     Set MD_TOOLS_DIR (pathsep-separated) to add your own search roots, e.g.
-    ``MD_TOOLS_DIR=D:\\software;E:\\tools``. The walk is depth-bounded so pointing it at
-    a large directory does not stall the run.
+    ``MD_TOOLS_DIR=/opt/md-tools:/home/me/bin`` on Linux, or on Windows
+    ``set MD_TOOLS_DIR=C:/tools;E:/more-tools`` (forward slashes avoid escapes).
+    The walk is depth-bounded so pointing it at a large directory does not stall the run.
     """
     if explicit:
         return explicit if os.path.exists(explicit) else None

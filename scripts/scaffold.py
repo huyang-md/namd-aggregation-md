@@ -377,7 +377,7 @@ def main(argv=None):
     if solute:
         case["ligand_resname"] = solute
         n_res = len({x["resid"] for x in atoms if x["resname"] == solute})
-        print(f"solute: {solute}  ({n_res} copies) 閳?override with --resname")
+        print(f"solute: {solute}  ({n_res} copies); override with --resname")
     case["stages"]["min"]["minimize_steps"] = 10000
     case["stages"]["nvt"]["ns"] = a.nvt_ns
     case["stages"]["npt"]["ns"] = a.npt_ns
@@ -421,6 +421,8 @@ def main(argv=None):
         print(f"{'rewrote' if existed else 'wrote'} {CASE_FILE} only; "
               f"{len(glob.glob(os.path.join(d, '*.conf')))} existing .conf file(s) untouched")
         return 0
+
+    extras, pack_lines = {}, []
     if a.packmol:
         if not a.molecules or not a.target_conc_mM:
             sys.exit("--packmol needs --molecules and --target-conc-mM")

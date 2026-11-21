@@ -337,7 +337,7 @@ def main(argv=None):
         for x, y in spec:
             if not (site_ok(x) and site_ok(y)):
                 missing = [s for s in (x, y) if not site_ok(s)]
-                print(f"[skip] rdf {x}|{y} 鈥?unknown site(s) {missing}; "
+                print(f"[skip] rdf {x}|{y} -- unknown site(s) {missing}; "
                       "atom names must exist in the solute, ring groups must be in case.json")
                 continue
             pairs.append((x, y))
