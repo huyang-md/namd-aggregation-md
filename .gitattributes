@@ -1,0 +1,10 @@
+# Normalise line endings to LF in the repository.
+# These files are consumed on Linux clusters (NAMD .conf, VMD .tcl), where CRLF
+# in control files can break parsing. Everyone checks out LF regardless of OS.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.pdf binary
+*.gz  binary
+*.zip binary

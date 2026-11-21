@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# produced by the scripts
+analysis/
+_pipeline_logs/
+*.dcd
+*.coor
+*.vel
+*.xsc
+*.log
+*.psf
+*.pdb
+*.prm
+*.rtf
+*.str
+*.tpr
+*.edr
+*.trr
