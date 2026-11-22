@@ -34,7 +34,9 @@ Two ways to play with it:
     python scripts/aggregate.py --dir examples/demo-case --traj 04_prod.dcd --mode centroid
     python scripts/aggregate.py --dir examples/demo-case --traj 04_prod.dcd --cutoff 6
 
-Outputs land in examples/demo-case/analysis/; start with summary.txt.
+Outputs land in examples/demo-case/analysis/; start with summary.txt. The run
+also writes clusters_vmd.tcl (--vmd-out): load ionized.psf + 04_prod.dcd in
+VMD and source that file to see the molecules coloured by cluster.
 """
 from __future__ import annotations
 
@@ -192,7 +194,8 @@ def main():
 
     print("running scripts/aggregate.py on the case:\n", flush=True)
     script = os.path.join(ROOT, "scripts", "aggregate.py")
-    r = subprocess.run([sys.executable, script, "--dir", CASE, "--traj", "04_prod.dcd"])
+    r = subprocess.run([sys.executable, script, "--dir", CASE, "--traj", "04_prod.dcd",
+                        "--vmd-out"])
     if r.returncode != 0:
         sys.exit(r.returncode)
 
@@ -200,6 +203,8 @@ def main():
     agg = os.path.join(ROOT, "scripts", "aggregate.py")
     print(f'  python "{agg}" --dir "{CASE}" --traj 04_prod.dcd --mode centroid --cutoff 6')
     print(f'  python "{agg}" --dir "{CASE}" --traj 04_prod.dcd --cutoff 6')
+    print("  see the aggregates in VMD: load ionized.psf + 04_prod.dcd, then source")
+    print(f'  "{os.path.join(CASE, "analysis", "clusters_vmd.tcl")}"')
     print(f'  outputs are in {os.path.join(CASE, "analysis")} -- start with summary.txt')
     return 0
 
