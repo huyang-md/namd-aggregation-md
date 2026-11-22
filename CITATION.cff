@@ -16,5 +16,5 @@ keywords:
   - Packmol
 license: GPL-3.0-or-later
 repository-code: "https://github.com/huyang-md/namd-aggregation-md"
-version: v1.0.0
+version: v1.0.1
 date-released: "2026-11-22"
