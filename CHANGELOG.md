@@ -5,6 +5,8 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-22
+
 ### Added
 - `aggregate.py --vmd-out`：生成按簇着色的 VMD Tcl 脚本——一簇一色、单体灰色、
   水/离子暗色小点，在 VMD 里 source 即可直接"看见"聚集体；demo 已默认生成
