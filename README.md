@@ -22,11 +22,15 @@ python -m pip install numpy
 
 # two-minute demo: synthesises a 40-molecule case, then analyses it (no MD software needed)
 python examples/demo.py
+# same idea for the stacking-geometry layer (J/H aggregates)
+python examples/demo_stacking.py
 
 # …or run the analysis yourself on the generated case
 python scripts/aggregate.py --dir examples/demo-case --traj 04_prod.dcd
+# see the aggregates in VMD: load the PSF + trajectory, then source the generated Tcl
+python scripts/aggregate.py --dir examples/demo-case --traj 04_prod.dcd --vmd-out
 
-# run the test suite (62 tests, synthesises its own data)
+# run the test suite (66 tests, synthesises its own data)
 python -m unittest discover -s tests
 ```
 
@@ -120,7 +124,7 @@ setx MD_TOOLS_DIR "C:\Users\<you>\AppData\Roaming\Python\Python313\Scripts"
 
 ```powershell
 python scripts/study_report.py --help
-python -m unittest discover -s tests        # 62 个测试，应全过
+python -m unittest discover -s tests        # 66 个测试，应全过
 ```
 
 ---
@@ -176,6 +180,17 @@ python "$S\analyze.py" --dir my-case --traj 04_prod.dcd --last-ns 50 --planes ri
 - `planes_*_nearest.csv` —— 相邻分子中心距
 - `clusters.csv` / `clusters_timeseries.csv` —— 聚集尺寸与演化
 
+`aggregate.py` 还有两个可选输出：
+
+- `--vmd-out` —— 在 `analysis\` 下生成 `clusters_vmd.tcl`：VMD 里载入 PSF 和轨迹后
+  File → Source File… 运行它，聚集体按簇着色（一簇一色，单体灰色，水/离子暗色小点）。
+  `examples/demo.py` 生成的小体系已带一个现成的，可以先拿它练手。
+- `--plots` —— 需要 matplotlib（缺了自动跳过），生成簇尺寸分布、尺寸与 Rg 时间线、
+  径向密度四张 PNG。CSV 永远是主输出，图只是顺手看。
+
+堆叠几何层（`analyze.py`）的练手数据：`python examples/demo_stacking.py`，它会合成
+一个标准 J 型堆积的小体系（12 个六元环分子，层间距 3.5 Å、滑移 4 Å）。
+
 ---
 
 ## 3. 换一个分子要改什么
@@ -217,7 +232,7 @@ python "$S\analyze.py" --dir my-case --traj 04_prod.dcd --last-ns 50 --planes ri
 | `preflight.py` | 跑前体检：参数文件、盒子、跨 conf 一致性、`firsttimestep` 与 `.xsc`、磁盘够不够、配置有没有被手改 |
 | `restart.py` | 断点续跑：从 `.xsc` 取真实步数、改输出名、算剩余步数和磁盘 |
 | `inspect_traj.py` | 轨迹审计：帧数、覆盖区间、缺口/重叠、日志是否正常结束 |
-| `aggregate.py` | **通用自组装分析**：聚集尺寸、形状（Rg/各向异性）、组成、径向密度 |
+| `aggregate.py` | **通用自组装分析**：聚集尺寸、形状（Rg/各向异性）、组成、径向密度；`--vmd-out` 出按簇着色的 VMD 脚本，`--plots` 可选出图 |
 | `analyze.py` | 堆叠几何（可选）：RDF / 滑移角 / 层间距 |
 | `compare_systems.py` | 多体系可比性：浓度、帧间隔、时长、力场旋钮 |
 | `study_report.py` | 把上面几项汇总成"现在能下哪些结论" |
@@ -250,7 +265,7 @@ DCD 读取器兼容：NAMD 的 6 值单元胞记录、9 值记录、以及 VMD �
 ## 7. 测试
 
 ```powershell
-python -m unittest discover -s tests        # 62 个测试
+python -m unittest discover -s tests        # 66 个测试
 ```
 
 测试不需要任何 MD 数据——DCD/PSF/PDB/XSC 都由测试自己合成。覆盖：
@@ -261,6 +276,7 @@ python -m unittest discover -s tests        # 62 个测试
 | `test_generators.py` | 盒子反算、Packmol/VMD 脚本、四个 conf 的生成与回读 |
 | `test_checks.py` | conf 解析、漂移检测、`firsttimestep` 校验、可比性判定 |
 | `test_analysis.py` | 回转半径与形状分类、跨边界聚簇、簇判据 |
+| `test_outputs.py` | VMD 按簇着色脚本、PNG 出图（出图部分装了 matplotlib 才跑） |
 | `test_docs.py` | 编码/BOM、语法、无个人数据、每个工具的 `--help` |
 
 其中几条是**回归测试**，专门盯住真出现过的 bug：
